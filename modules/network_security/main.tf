@@ -1,5 +1,5 @@
 resource "aws_security_group" "ssh" {
-  name_prefix = "${var.project_prefix}-ssh-sg"
+  name        = "${var.project_prefix}-ssh-sg"
   description = "Security group for SSH access"
   vpc_id      = var.vpc_id
 
@@ -27,7 +27,7 @@ resource "aws_security_group_rule" "ssh_egress" {
 }
 
 resource "aws_security_group" "public_http" {
-  name_prefix = "${var.project_prefix}-public-http-sg"
+  name        = "${var.project_prefix}-public-http-sg"
   description = "Security group for public HTTP access"
   vpc_id      = var.vpc_id
 
@@ -55,7 +55,7 @@ resource "aws_security_group_rule" "public_http_egress" {
 }
 
 resource "aws_security_group" "private_http" {
-  name_prefix = "${var.project_prefix}-private-http-sg"
+  name        = "${var.project_prefix}-private-http-sg"
   description = "Security group for private HTTP access"
   vpc_id      = var.vpc_id
 
