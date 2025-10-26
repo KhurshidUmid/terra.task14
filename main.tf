@@ -19,6 +19,7 @@ module "application" {
   source = "./modules/application"
 
   project_prefix        = var.project_prefix
+  vpc_id                = module.network.vpc_id
   subnet_ids            = module.network.public_subnet_ids
   ssh_security_group_id = module.network_security.ssh_sg_id
   private_http_sg_id    = module.network_security.private_http_sg_id

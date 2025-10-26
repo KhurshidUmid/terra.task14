@@ -18,6 +18,21 @@ locals {
   )
 }
 
+data "aws_ami" "amazon_linux_2" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
+}
+
 resource "aws_launch_template" "main" {
   name_prefix   = "${var.project_prefix}-template"
   image_id      = data.aws_ami.amazon_linux_2.id
@@ -78,7 +93,7 @@ resource "aws_lb_target_group" "main" {
   name_prefix = "tg"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = data.aws_subnet.selected.vpc_id
+  vpc_id      = var.vpc_id
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 2
@@ -103,26 +118,4 @@ resource "aws_lb_listener" "main" {
 resource "aws_autoscaling_attachment" "main" {
   autoscaling_group_name = aws_autoscaling_group.main.id
   lb_target_group_arn    = aws_lb_target_group.main.arn
-}
-
-data "aws_ami" "amazon_linux_2" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-
-  filter {
-    name   = "state"
-    values = ["available"]
-  }
-}
-
-data "aws_subnet" "selected" {
-  filter {
-    name   = "subnet-id"
-    values = var.subnet_ids
-  }
 }

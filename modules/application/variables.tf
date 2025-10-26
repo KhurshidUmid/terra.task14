@@ -3,6 +3,11 @@ variable "project_prefix" {
   type        = string
 }
 
+variable "vpc_id" {
+  description = "ID of the VPC"
+  type        = string
+}
+
 variable "subnet_ids" {
   description = "IDs of subnets for instances and load balancer"
   type        = list(string)
