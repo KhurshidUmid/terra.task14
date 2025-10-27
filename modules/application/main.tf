@@ -21,8 +21,8 @@ locals {
   user_data_script = base64encode(<<-EOF
               #!/bin/bash
               yum install -y httpd
-              COMPUTE_MACHINE_UUID=$(cat /sys/devices/virtual/dmi/id/product_uuid | tr '[:upper:]' '[:lower:]')
-              COMPUTE_INSTANCE_ID=$(ec2-metadata --instance-id | cut -d' ' -f2)
+              COMPUTE_MACHINE_UUID=$$(cat /sys/devices/virtual/dmi/id/product_uuid | tr '[:upper:]' '[:lower:]')
+              COMPUTE_INSTANCE_ID=$$(ec2-metadata --instance-id | cut -d' ' -f2)
               mkdir -p /var/www/html
               cat > /var/www/html/index.html <<'HTML'
               <html>
