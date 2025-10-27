@@ -1,9 +1,30 @@
+#locals {
+#  user_data_script = base64encode(<<-EOF
+#              COMPUTE_MACHINE_UUID=$(cat /sys/devices/virtual/dmi/id/product_uuid | tr '[:upper:]' '[:lower:]')
+#              COMPUTE_INSTANCE_ID=$(ec2-metadata --instance-id | cut -d' ' -f2)
+#              cat > /var/www/html/index.html <<HTML
+#              <html>
+#              <head><title>Instance Info</title></head>
+#              <body>
+#              <h1>This message was generated on instance $COMPUTE_INSTANCE_ID with the following UUID $COMPUTE_MACHINE_UUID</h1>
+#              </body>
+#              </html>
+#              HTML
+#              yum install -y httpd
+#              systemctl start httpd
+#              systemctl enable httpd
+#              EOF
+#  )
+#}
+
 locals {
   user_data_script = base64encode(<<-EOF
               #!/bin/bash
+              yum install -y httpd
               COMPUTE_MACHINE_UUID=$(cat /sys/devices/virtual/dmi/id/product_uuid | tr '[:upper:]' '[:lower:]')
               COMPUTE_INSTANCE_ID=$(ec2-metadata --instance-id | cut -d' ' -f2)
-              cat > /var/www/html/index.html <<HTML
+              mkdir -p /var/www/html
+              cat > /var/www/html/index.html <<'HTML'
               <html>
               <head><title>Instance Info</title></head>
               <body>
@@ -11,12 +32,13 @@ locals {
               </body>
               </html>
               HTML
-              yum install -y httpd
               systemctl start httpd
               systemctl enable httpd
               EOF
   )
 }
+
+
 
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
